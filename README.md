@@ -1,7 +1,7 @@
 # 🏃‍♂️ RaceDay Event Management System
 
 ### A Web-Based Event Management System for Running, Walking and Cycling Events
-
+**Student Name:** Katlego Moshaba
 **Student Number:** ST10464476  
 **Module:** PROG6212  
 
