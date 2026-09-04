@@ -18,15 +18,20 @@ jobs:
 
       - name: Check required documentation
         run: |
+          echo "Checking RaceDay documentation..."
           test -f README.md
           test -f docs/RaceDay_ERD.png
           test -f docs/RaceDay_API_Endpoint_Plan.pdf
           test -f docs/RaceDay_Database.sql
+          echo "Required documentation found."
 
-      - name: Validate repository structure
+      - name: Check repository structure
         run: |
+          echo "Checking repository structure..."
           test -d docs
           test -d .github/workflows
+          echo "Repository structure is valid."
 
       - name: Validation successful
-        run: echo "RaceDay repository validation completed successfully."
+        run: |
+          echo "RaceDay repository validation completed successfully."
