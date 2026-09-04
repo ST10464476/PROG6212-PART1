@@ -1,0 +1,23 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+
+# Build files
+Debug/
+Release/
+
+# Temporary files
+*.tmp
+*.log
+
+# SQL Server temporary files
+*.bak
+
+# Operating system files
+.DS_Store
+Thumbs.db
