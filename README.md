@@ -208,3 +208,7 @@ GitHub is used to store the project files and track changes through commits.
 ## Author
 
 RaceDay System Project — PROG6212
+
+## GitHub Actions Build Screenshot
+
+![Successful GitHub Actions build](Screenshot%202026-10-17%20135210.png)
