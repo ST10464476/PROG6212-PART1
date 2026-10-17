@@ -127,3 +127,84 @@ PROG6212
 │
 ├── .gitignore
 └── README.md
+
+
+
+---
+
+# Part 2: RaceDay REST API
+
+## Project Description
+
+RaceDay is a system designed to manage events, organisers, participants, event categories, enrolments, and results. This part of the project focuses on developing a REST API to support the management of the RaceDay system.
+
+## Technologies Used
+
+- C#
+- ASP.NET Core Web API
+- SQL Server
+- Entity Framework Core
+- Swagger / OpenAPI
+- GitHub
+
+## Project Features
+
+The RaceDay API is designed to support the following functionality:
+
+- User registration and login
+- User profile management
+- Event management
+- Event category management
+- Event enrolments
+- Event results
+
+Only features implemented in the project should be considered complete.
+
+## Project Structure
+
+The project contains the following main files and folders:
+
+- **Controllers:** Handles API requests and responses.
+- **Data:** Contains database-related code.
+- **Models:** Contains the application's data models.
+- **Properties:** Contains project launch settings.
+- **Program.cs:** Configures and starts the application.
+- **appsettings.json:** Contains application configuration.
+- **REST API.csproj:** Contains project settings and dependencies.
+- **REST API.sln:** Visual Studio solution file.
+- **API.http:** Contains HTTP requests for testing the API.
+- **Database Script:** Contains the SQL database setup.
+- **API Endpoint Plan:** Documents the planned API endpoints.
+
+## Database
+
+The RaceDay system uses SQL Server to store and manage application data. The database script provides the table definitions and related database setup required for the project.
+
+The database must be configured correctly before running API operations that depend on it.
+
+## Running the API
+
+1. Open the solution file in Visual Studio.
+2. Restore the required NuGet packages if prompted.
+3. Check the database connection settings in `appsettings.json`.
+4. Ensure that the SQL Server database is configured.
+5. Run the application.
+6. Open the Swagger page to view and test the available API endpoints.
+
+## API Testing
+
+Swagger / OpenAPI can be used to inspect and test the available endpoints. The `API.http` file can also be used to send HTTP requests where applicable.
+
+Successful API responses depend on the endpoint, request data, database configuration, and application state.
+
+## Documentation
+
+The repository includes the API endpoint plan, database script, and supporting project documentation.
+
+## Version Control
+
+GitHub is used to store the project files and track changes through commits.
+
+## Author
+
+RaceDay System Project — PROG6212
