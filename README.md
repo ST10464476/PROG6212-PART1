@@ -212,3 +212,66 @@ RaceDay System Project — PROG6212
 ## GitHub Actions Build Screenshot
 
 ![Successful GitHub Actions build](Screenshot%202026-10-17%20135210.png)
+
+---
+
+# PART 3 – MVC WEB APPLICATION
+
+## Overview
+
+Part 3 extends the RaceDay system by introducing an ASP.NET Core MVC web application that communicates with the REST API developed in Part 2.
+
+## Technologies Used
+
+- ASP.NET Core MVC
+- ASP.NET Core Web API
+- C#
+- .NET 8
+- SQL Server
+- Entity Framework Core
+- Bootstrap
+- Azure Blob Storage
+- Docker
+
+## Features
+
+### Organiser
+- Organiser login and dashboard.
+- Create, edit and delete sporting events.
+- Upload event banner images.
+- Manage event categories.
+- View participant enrolments.
+- Enter race results.
+
+### Participant
+- Participant login and dashboard.
+- Browse sporting events.
+- View event details.
+- Enrol in events.
+- View personal enrolments.
+- Update profile information.
+- Upload profile pictures.
+- View race results.
+
+## Azure Integration
+
+Azure Blob Storage is used to store participant profile pictures and event banner images.
+
+## Project Structure
+
+- RaceDay.API – Handles API operations, authentication and database communication.
+- RaceDay.Web – Provides the MVC web interface for organisers and participants.
+
+## Running the Application
+
+Open the RaceDay solution in Visual Studio 2022.
+
+Set RaceDay.API and RaceDay.Web as startup projects and press F5.
+
+API Swagger: https://localhost:7237/
+
+MVC Website: https://localhost:7172/
+
+## Conclusion
+
+Part 3 completes the RaceDay web application by connecting the MVC interface to the REST API and providing features for event organisers and participants.
