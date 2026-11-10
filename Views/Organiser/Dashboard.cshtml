@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Organiser Dashboard";
+}
+
+<div class="container mt-4">
+
+    <div class="p-4 mb-4 bg-dark text-white rounded shadow">
+        <h1>RaceDay Organiser Dashboard</h1>
+        <p class="mb-0">Manage your sporting events, participants and race results.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 h-100">
+                <h4>Create Event</h4>
+                <p>Add a new running, walking or cycling event.</p>
+                <a href="/Events/Create" class="btn btn-success mt-auto">
+                    Create Event
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 h-100">
+                <h4>Manage Events</h4>
+                <p>Create, update and manage sporting events.</p>
+                <a href="/Events/Index" class="btn btn-primary mt-auto">
+                    Manage Events
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 h-100">
+                <h4>Manage Categories</h4>
+                <p>Create and manage event categories.</p>
+                <a href="/Categories/Index" class="btn btn-primary mt-auto">
+                    Manage Categories
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 h-100">
+                <h4>Participant Enrolments</h4>
+                <p>View participants registered for your events.</p>
+                <a href="/Enrolments/Index" class="btn btn-primary mt-auto">
+                    View Enrolments
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 h-100">
+                <h4>Race Results</h4>
+                <p>Enter, update and view participants' race results.</p>
+                <a href="/Results/Index" class="btn btn-primary mt-auto">
+                    Manage Results
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <a href="/Auth/Logout" class="btn btn-danger">
+            Logout
+        </a>
+    </div>
+
+</div>

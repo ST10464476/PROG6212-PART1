@@ -1,0 +1,84 @@
+﻿@model RaceDay.Web.Models.EventDetailsViewModel
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="container mt-4">
+
+    <h2>@Model.Event.EventName</h2>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+
+            <h5>Event Information</h5>
+
+            <p><strong>Description:</strong> @Model.Event.Description</p>
+            <p><strong>Date:</strong> @Model.Event.EventDate.ToString("dd MMMM yyyy")</p>
+            <p><strong>Location:</strong> @Model.Event.Location</p>
+            <p><strong>Distance:</strong> @Model.Event.Distance km</p>
+            <p><strong>Entry Fee:</strong> R @Model.Event.EntryFee</p>
+            <p><strong>Status:</strong> @Model.Event.Status</p>
+
+        </div>
+    </div>
+
+    <h4 class="mt-4">Available Categories</h4>
+
+    @if (Model.Categories != null && Model.Categories.Any())
+    {
+        <div class="row">
+
+            @foreach (var category in Model.Categories)
+            {
+                <div class="col-md-6 mb-3">
+
+                    <div class="card h-100">
+                        <div class="card-body">
+
+                            <h5>@category.CategoryName</h5>
+
+                            <p><strong>Distance:</strong> @category.Distance km</p>
+                            <p><strong>Minimum Age:</strong> @category.AgeMin</p>
+                            <p><strong>Maximum Age:</strong> @category.AgeMax</p>
+                            <p><strong>Entry Fee:</strong> R @category.EntryFee</p>
+
+                            <form method="post"
+                                  asp-controller="Enrolments"
+                                  asp-action="Create">
+
+                                <input type="hidden"
+                                       name="eventId"
+                                       value="@Model.Event.EventID" />
+
+                                <input type="hidden"
+                                       name="categoryId"
+                                       value="@category.CategoryID" />
+
+                                <button type="submit"
+                                        class="btn btn-success">
+                                    Enrol Now
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No categories are currently available for this event.
+        </div>
+    }
+
+    <a href="/Events/Index" class="btn btn-secondary mt-3">
+        Back to Events
+    </a>
+
+</div>

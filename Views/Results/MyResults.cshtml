@@ -1,0 +1,43 @@
+﻿@model List<RaceDay.Web.Models.ResultViewModel>
+
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h2>My Race Results</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Result ID</th>
+                <th>Enrolment ID</th>
+                <th>Finish Time</th>
+                <th>Position</th>
+                <th>Average Pace</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model)
+            {
+                <tr>
+                    <td>@result.ResultID</td>
+                    <td>@result.EnrolmentID</td>
+                    <td>@result.FinishTime</td>
+                    <td>@result.Position</td>
+                    <td>@result.AveragePace</td>
+                    <td>@result.ResultStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>You do not have any race results yet.</p>
+}
+
+<a asp-controller="Participant" asp-action="Dashboard"
+   class="btn btn-secondary">Back to Dashboard</a>

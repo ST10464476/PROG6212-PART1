@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Participant Dashboard";
+}
+
+<div class="container mt-4">
+
+    <div class="p-4 mb-4 bg-dark text-white rounded shadow">
+        <h1>RaceDay Participant Dashboard</h1>
+        <p class="mb-0">Welcome to RaceDay! Your journey starts here.</p>
+    </div>
+
+    <!-- Profile Picture Section -->
+    <div class="card shadow p-4 mb-4">
+        <h4>My Profile Picture</h4>
+
+        <div class="mb-3">
+            @if (!string.IsNullOrEmpty(ViewBag.ProfilePictureUrl))
+            {
+                <img src="@ViewBag.ProfilePictureUrl"
+                     alt="Profile Picture"
+                     class="rounded-circle border"
+                     style="width:150px; height:150px; object-fit:cover;" />
+            }
+            else
+            {
+                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
+                     style="width:150px; height:150px;">
+                    No Picture
+                </div>
+            }
+        </div>
+
+        @if (TempData["ProfileMessage"] != null)
+        {
+            <div class="alert alert-info">
+                @TempData["ProfileMessage"]
+            </div>
+        }
+
+        <form asp-controller="Participant"
+              asp-action="UploadProfilePicture"
+              method="post"
+              enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label class="form-label">Choose a profile picture</label>
+                <input type="file"
+                       name="image"
+                       class="form-control"
+                       accept=".jpg,.jpeg,.png,.webp"
+                       required />
+                <small class="text-muted">
+                    JPG, PNG or WEBP. Maximum size: 5 MB.
+                </small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Upload Profile Picture
+            </button>
+        </form>
+    </div>
+
+    <!-- Dashboard Features -->
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="card shadow p-3 h-100">
+                <h4>My Profile</h4>
+                <p>View and update your personal information.</p>
+                <a href="/Participant/Profile" class="btn btn-primary mt-auto">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-3 h-100">
+                <h4>Browse Events</h4>
+                <p>Discover upcoming running, walking and cycling events.</p>
+                <a href="/Events/Index" class="btn btn-primary mt-auto">
+                    View Events
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-3 h-100">
+                <h4>My Enrolments</h4>
+                <p>View your event registrations and their status.</p>
+                <a href="/Enrolments/MyEnrolments" class="btn btn-primary mt-auto">
+                    My Enrolments
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-3 h-100">
+                <h4>My Results</h4>
+                <p>Check your race history and performance.</p>
+                <a href="/Results/MyResults" class="btn btn-primary mt-auto">
+                    View Results
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <a href="/Auth/Logout" class="btn btn-danger">
+            Logout
+        </a>
+    </div>
+
+</div>

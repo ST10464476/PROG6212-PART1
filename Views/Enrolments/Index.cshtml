@@ -1,0 +1,91 @@
+﻿@model List<RaceDay.Web.Models.EnrolmentViewModel>
+
+@{
+    ViewData["Title"] = "Manage Enrolments";
+    var events = ViewBag.Events as List<RaceDay.Web.Models.EventViewModel>;
+}
+
+<div class="container mt-4">
+    <h2>Manage Event Enrolments</h2>
+    <p>View participants registered for your events and enter their race results.</p>
+
+    <form method="get" asp-controller="Enrolments" asp-action="Index">
+        <div class="mb-3">
+            <label class="form-label">Select Event</label>
+
+            <select name="eventId" class="form-select">
+                <option value="">-- Select an Event --</option>
+
+                @if (events != null)
+                {
+                    foreach (var item in events)
+                    {
+                        <option value="@item.EventID"
+                                selected="@(ViewBag.SelectedEventID != null && (int)ViewBag.SelectedEventID == item.EventID)">
+                            @item.EventName
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            View Enrolments
+        </button>
+    </form>
+
+    <hr />
+
+    @if (ViewBag.SelectedEventID != null)
+    {
+        <h4>Registered Participants</h4>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Enrolment ID</th>
+                            <th>Participant ID</th>
+                            <th>Category ID</th>
+                            <th>Race Number</th>
+                            <th>Enrolment Date</th>
+                            <th>Payment Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var enrolment in Model)
+                        {
+                            <tr>
+                                <td>@enrolment.EnrolmentID</td>
+                                <td>@enrolment.ParticipantID</td>
+                                <td>@enrolment.CategoryID</td>
+                                <td>@enrolment.RaceNumber</td>
+                                <td>@enrolment.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                                <td>@enrolment.PaymentStatus</td>
+                                <td>
+                                    <a asp-controller="Results"
+                                       asp-action="Create"
+                                       asp-route-enrolmentId="@enrolment.EnrolmentID"
+                                       asp-route-eventId="@enrolment.EventID"
+                                       class="btn btn-success btn-sm">
+                                        Enter Result
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="alert alert-info">
+                No participants have enrolled in this event yet.
+            </p>
+        }
+    }
+</div>

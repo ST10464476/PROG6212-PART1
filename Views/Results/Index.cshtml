@@ -1,0 +1,63 @@
+﻿@model List<RaceDay.Web.Models.ResultViewModel>
+
+@{
+    ViewData["Title"] = "Event Results";
+    var events = ViewBag.Events as List<RaceDay.Web.Models.EventViewModel>;
+}
+
+<h2>Event Results</h2>
+
+<form method="get" asp-action="Index">
+    <label>Select Event</label>
+    <select name="eventId" class="form-select">
+        <option value="">Choose an event</option>
+        @if (events != null)
+        {
+            foreach (var item in events)
+            {
+                <option value="@item.EventID"
+                        selected="@(ViewBag.SelectedEventID == item.EventID)">
+                    @item.EventName
+                </option>
+            }
+        }
+    </select>
+    <button type="submit" class="btn btn-primary mt-2">
+        View Results
+    </button>
+</form>
+
+<hr />
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Result ID</th>
+                <th>Enrolment ID</th>
+                <th>Finish Time</th>
+                <th>Position</th>
+                <th>Average Pace</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model)
+            {
+                <tr>
+                    <td>@result.ResultID</td>
+                    <td>@result.EnrolmentID</td>
+                    <td>@result.FinishTime</td>
+                    <td>@result.Position</td>
+                    <td>@result.AveragePace</td>
+                    <td>@result.ResultStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No results found for this event yet.</p>
+}
