@@ -1,140 +1,101 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using RaceDay.API.Data;
-using RaceDay.API.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using RaceDay.Web.Models;
+using RaceDay.Web.Services;
+using System.Text.Json;
 
-namespace RaceDay.API.Controllers
+namespace RaceDay.Web.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : Controller
     {
-        private readonly RaceDayContext _db;
-        private readonly PasswordHasher<User> _hasher = new();
+        private readonly ApiService _apiService;
 
-        public AuthController(RaceDayContext db)
+        public AuthController(ApiService apiService)
         {
-            _db = db;
+            _apiService = apiService;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        [HttpGet]
+        public IActionResult Register()
         {
-            if (request.Role != "Organiser" &&
-                request.Role != "Participant")
-            {
-                return BadRequest("Role must be Organiser or Participant.");
-            }
-
-            if (string.IsNullOrWhiteSpace(request.FirstName) ||
-                string.IsNullOrWhiteSpace(request.LastName) ||
-                string.IsNullOrWhiteSpace(request.Email) ||
-                string.IsNullOrWhiteSpace(request.Password))
-            {
-                return BadRequest("Please provide your name, email and password.");
-            }
-
-            var email = request.Email.Trim();
-
-            if (await _db.Users.AnyAsync(u => u.Email == email))
-            {
-                return Conflict("An account with this email already exists.");
-            }
-
-            var user = new User
-            {
-                FirstName = request.FirstName.Trim(),
-                LastName = request.LastName.Trim(),
-                Email = email,
-                PhoneNumber = request.PhoneNumber.Trim(),
-                Role = request.Role,
-                DateRegistered = DateTime.UtcNow
-            };
-
-            user.PasswordHash = _hasher.HashPassword(user, request.Password);
-
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
-
-            return Ok(new
-            {
-                user.UserID,
-                user.FirstName,
-                user.LastName,
-                user.Email,
-                user.Role
-            });
+            return View();
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginRequest request)
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            var email = request.Email.Trim();
+            if (!ModelState.IsValid)
+                return View(model);
 
-            var user = await _db.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
+            var response = await _apiService.PostAsync(
+                "api/auth/register", model);
 
-            if (user == null)
+            if (!response.IsSuccessStatusCode)
             {
-                return Unauthorized("Invalid email or password.");
+                ModelState.AddModelError("", "Registration failed. Please check your details.");
+                return View(model);
             }
 
-            var result = _hasher.VerifyHashedPassword(
-                user, user.PasswordHash, request.Password);
+            return RedirectToAction("Login");
+        }
 
-            if (result == PasswordVerificationResult.Failed)
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var response = await _apiService.PostAsync(
+                "api/auth/login", model);
+
+            if (!response.IsSuccessStatusCode)
             {
-                return Unauthorized("Invalid email or password.");
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View(model);
             }
 
-            var claims = new List<Claim>
+            if (response.Headers.TryGetValues("Set-Cookie", out var cookieHeaders))
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
-                new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+                var apiCookie = cookieHeaders.FirstOrDefault()?.Split(';')[0];
 
-            var identity = new ClaimsIdentity(
-                claims,
-                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
+                if (!string.IsNullOrEmpty(apiCookie))
+                {
+                    HttpContext.Session.SetString("ApiCookie", apiCookie);
+                }
+            }
+            var json = await response.Content.ReadAsStringAsync();
 
-            var principal = new ClaimsPrincipal(identity);
+            using var document = JsonDocument.Parse(json);
 
-            await HttpContext.SignInAsync(
-                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme,
-                principal);
+            var root = document.RootElement;
 
-            HttpContext.Session.SetString("UserID", user.UserID.ToString());
-            HttpContext.Session.SetString("Role", user.Role);
+            HttpContext.Session.SetString(
+                "UserID",
+                root.GetProperty("userID").ToString());
 
+            HttpContext.Session.SetString(
+                "Email",
+                root.GetProperty("email").GetString() ?? "");
 
-            return Ok(new
-            {
-                Message = "Login successful.",
-                user.UserID,
-                user.Email,
-                user.Role
-            });
+            HttpContext.Session.SetString(
+                "Role",
+                root.GetProperty("role").GetString() ?? "");
+
+            if (HttpContext.Session.GetString("Role") == "Organiser")
+                return RedirectToAction("Dashboard", "Organiser");
+
+            return RedirectToAction("Dashboard", "Participant");
         }
 
-        [HttpGet("me")]
-        [Authorize]
-        public IActionResult Me()
+        public IActionResult Logout()
         {
-            return Ok(new
-            {
-                UserID = User.FindFirstValue(ClaimTypes.NameIdentifier),
-                Email = User.Identity?.Name,
-                Role = User.FindFirstValue(ClaimTypes.Role),
-                SessionUserID = HttpContext.Session.GetString("UserID"),
-                SessionRole = HttpContext.Session.GetString("Role")
-            });
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
         }
-
     }
 }
-
